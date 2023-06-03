@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 img {
-  @apply max-w-full max-h-full;
+  @apply max-w-full max-h-full cursor-pointer;
 }
 
 h1 {
