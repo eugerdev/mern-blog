@@ -4,7 +4,10 @@ import { useState } from 'react'
 import eye from '../assets/eye.svg'
 import eyeSlash from '../assets/eye-slash.svg'
 import { toast } from 'react-toastify'
+import { Navigate } from 'react-router-dom'
+import { useUserStore } from '../UserContext'
 export default function LoginPage() {
+  const setUser = useUserStore((state) => state.setUser)
   const {
     register,
     handleSubmit,
@@ -16,19 +19,28 @@ export default function LoginPage() {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
     })
 
-    // if (res.status === 200) {
-    //   toast.success('Login successful!')
-    // } else if (res.status === 400) {
-    //   toast.error('Error occured!')
-    // } else {
-    //   toast.error('Login failed!')
-    // }
-    console.log(res)
+    if (res.status === 200) {
+      res.json().then((data) => {
+        toast.success('Login successful!')
+        setUser(data)
+        setNavigate(true)
+      })
+    } else if (res.status === 400) {
+      toast.error('Email or password incorrect!')
+    } else {
+      toast.error('Login failed!')
+    }
   }
 
   const [showPassword, setShowPassword] = useState(false)
+  const [navigate, setNavigate] = useState(false)
+
+  if (navigate) {
+    return <Navigate to='/' />
+  }
 
   return (
     <section className='flex flex-col gap-20'>
